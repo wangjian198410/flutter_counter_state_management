@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:statemanagement/CounterModel.dart';
+
+import 'package:statemanagement/counterStateContainer.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +13,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: CounterStateContainer(
+        child: MyHomePage(title: 'Flutter Demo Home Page'),
+        counterModel: CounterModel(),
+      ),
     );
   }
 }
@@ -27,19 +33,22 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+    CounterStateContainer.of(context).increment();
   }
 
   void _decrementCounter() {
+    CounterStateContainer.of(context).decrement();
+  }
+
+  void didValueChange() {
     setState(() {
-      _counter--;
+      _counter = 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    CounterStateContainer.of(context).counter.addListener(didValueChange);
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -52,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 'You have pushed the button this many times:',
               ),
               Text(
-                '$_counter',
+                '${CounterStateContainer.of(context).counter.value}',
                 style: Theme.of(context).textTheme.display1,
               ),
             ],
