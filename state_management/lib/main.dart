@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void didValueChange() {
     setState(() {
-      _counter = 1;
+      //_counter = 1;
     });
   }
 
