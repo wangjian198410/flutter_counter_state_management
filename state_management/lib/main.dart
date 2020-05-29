@@ -1,77 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import './counterModel.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp(
+    model: CounterModel(),
+  ));
+}
 
 class MyApp extends StatelessWidget {
+  final CounterModel model;
+
+  const MyApp({Key key, @required this.model}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    // At the top level of our app, we'll, create a ScopedModel Widget. This
+    // will provide the CounterModel to all children in the app that request it
+    // using a ScopedModelDescendant.
+    return ScopedModel<CounterModel>(
+      model: model,
+      child: MaterialApp(
+        title: 'Scoped Model Demo',
+        home: CounterHome('Scoped Model Demo'),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class CounterHome extends StatelessWidget {
   final String title;
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
+  CounterHome(this.title);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.display1,
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            FloatingActionButton(
-              onPressed: _incrementCounter,
-              tooltip: 'Increment',
-              child: Icon(Icons.add),
-            ),
-            FloatingActionButton(
-              onPressed: _decrementCounter,
-              tooltip: 'Decrement',
-              child: Icon(Icons.remove),
+            Text('You have pushed the button this many times:'),
+            // Create a ScopedModelDescendant. This widget will get the
+            // CounterModel from the nearest parent ScopedModel<CounterModel>.
+            // It will hand that CounterModel to our builder method, and
+            // rebuild any time the CounterModel changes (i.e. after we
+            // `notifyListeners` in the Model).
+            ScopedModelDescendant<CounterModel>(
+              builder: (context, child, model) {
+                return Text(
+                  model.counter.toString(),
+                  style: Theme.of(context).textTheme.display1,
+                );
+              },
             ),
           ],
-        ));
+        ),
+      ),
+      // Use the ScopedModelDescendant again in order to use the increment
+      // method from the CounterModel
+      floatingActionButton: ScopedModelDescendant<CounterModel>(
+        builder: (context, child, model) {
+          return FloatingActionButton(
+            onPressed: model.increment,
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          );
+        },
+      ),
+    );
   }
 }
