@@ -15,63 +15,56 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+// ignore: must_be_immutable
+class MyHomePage extends StatelessWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text(title),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'You have pushed the button this many times:',
+                ),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.display1,
+                ),
+              ],
+            ),
+          ),
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text(
-                'You have pushed the button this many times:',
+              FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    _counter++;
+                  });
+                },
+                tooltip: 'Increment',
+                child: Icon(Icons.add),
               ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.display1,
+              FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    _counter--;
+                  });
+                },
+                tooltip: 'Decrement',
+                child: Icon(Icons.remove),
               ),
             ],
-          ),
-        ),
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            FloatingActionButton(
-              onPressed: _incrementCounter,
-              tooltip: 'Increment',
-              child: Icon(Icons.add),
-            ),
-            FloatingActionButton(
-              onPressed: _decrementCounter,
-              tooltip: 'Decrement',
-              child: Icon(Icons.remove),
-            ),
-          ],
-        ));
+          ));
+    });
   }
 }
