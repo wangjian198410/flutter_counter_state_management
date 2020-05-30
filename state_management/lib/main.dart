@@ -43,6 +43,7 @@ class MyHomePage extends StatelessWidget {
                 'You have pushed the button this many times:',
               ),
               StreamBuilder(
+                initialData: 9,
                 stream: counterModel.stream$,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   return Text(

@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
 class CounterModel {
-  BehaviorSubject _counter = BehaviorSubject.seeded(0);
+  BehaviorSubject _counter = BehaviorSubject<int>.seeded(0);
 
   get stream$ => _counter.stream;
 
