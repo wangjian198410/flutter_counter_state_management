@@ -26,9 +26,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _bloc = CounterBloc();
+
   @override
   Widget build(BuildContext context) {
-    final _bloc = CounterBloc();
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -67,5 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bloc.dispose();
   }
 }
