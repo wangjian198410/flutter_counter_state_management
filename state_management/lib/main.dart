@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:statemanagement/counter_bloc.dart';
 import 'package:statemanagement/counter_event.dart';
+import 'package:statemanagement/counter_provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return CounterProvider(
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -26,10 +29,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _bloc = CounterBloc();
-
   @override
   Widget build(BuildContext context) {
+    final _bloc = CounterProvider.of(context);
+
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -73,6 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     super.dispose();
-    _bloc.dispose();
+    CounterProvider.of(context).dispose();
   }
 }
